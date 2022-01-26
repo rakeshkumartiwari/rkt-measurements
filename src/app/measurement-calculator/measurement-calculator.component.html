@@ -1,0 +1,50 @@
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-header">
+        Measurement calculator
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="form-group col-sm-3">
+            <label for="height">Height</label>
+            <input [(ngModel)]="height" type="number" class="form-control" id="height">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="width">Width</label>
+            <input [(ngModel)]="width" type="number" id="width" class="form-control">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="quantity">Quantity</label>
+            <input [(ngModel)]="quantity" type="number" class="form-control" id="quantity">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="perSqRate">Per squre feet rate</label>
+            <input [(ngModel)]="perSqRate"  class="form-control" id="perSqRate">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="form-group col-sm-3">
+            <button class="btn btn-warning" (click)="onCalculate()">Calculate</button>
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="totalSqFeet" class="text-success">Total squre feet : {{totalSqFeet}}</label>
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="totalSqRate" class="text-success">Total squre feet rate : {{totalSqRate | currency:'INR'}}</label>
+          </div>
+          <div class="form-group col-sm-3"></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-5"></div>
+          <div class="col-sm-5"></div>
+          <div class="col-sm-1">
+            <button class="btn btn-primary" (click)="onReset()">Reset</button>
+          </div>
+          <div class="col-sm-1">
+            <button class="btn btn-primary" (click)="goToHome()">Home</button>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
