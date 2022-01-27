@@ -21,8 +21,8 @@ export class MeasurementCalculatorComponent implements OnInit {
   }
 
   onCalculate(): void {
-    this.totalSqFeet = (+this.height * +this.width * +this.quantity) / 12;
-    this.totalSqRate = +this.perSqRate * this.totalSqFeet;
+    this.totalSqFeet = (+this.height * +this.width) / 144;
+    this.totalSqRate = +this.perSqRate * this.totalSqFeet * +this.quantity;
   }
 
   onReset(): void {
