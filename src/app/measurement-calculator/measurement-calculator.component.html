@@ -1,50 +1,82 @@
 <div class="container mt-5">
-    <div class="card">
-      <div class="card-header">
-        Measurement calculator
+  <div class="card">
+    <div class="card-header bg-primary text-light">
+      {{ profileData?.firstName ? profileData.firstName + " " + profileData.lastName : "Customer name" }}
+      {{ profileData?.address }}
+      {{ profileData?.city }}
+      {{ profileData?.zip }}
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 card">
+          <form [formGroup]="measurementsFrom" (ngSubmit)="onCalculateTotalSqFeet()">
+            <div class="row mb-3" formArrayName="mesurementList">
+              <ng-container *ngFor="let data of dataList; let i=index" [formGroupName]="i">
+                <div class="form-group col-sm-4">
+                  <label for="height">Height</label>
+                  <input formControlName="height" type="number" class="form-control" id="height">
+                </div>
+                <div class="form-group col-sm-4">
+                  <label for="width">Width</label>
+                  <input formControlName="width" type="number" id="width" class="form-control">
+                </div>
+                <div class="form-group col-sm-2">
+                  <label for="quantity">Quantity</label>
+                  <input formControlName="quantity" type="number" class="form-control" id="quantity">
+                </div>
+                <div class="col-sm-2 icon-group">
+                  <span (click)="addMesurement()">
+                    <i class="bi-plus-circle-fill"></i>
+                  </span>
+                  <span (click)="deleteMesurement(i)" *ngIf="dataList.length > 1">
+                    <i class="bi-trash-fill"></i>
+                  </span>
+                </div>
+              </ng-container>
+              <div class="row">
+                <div class="form-group col-sm-6 mt-3">
+                  <button class="btn btn-primary"
+                    [disabled]="!measurementsFrom.controls['mesurementList'].valid">
+                    <i class="bi-calculator-fill"></i></button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6 card">
+          <form [formGroup]="sumTotalForm" (submit)="onTotalCalculate()">
+                <div class="row">
+                  <div class="form-group col-sm-4">
+                    <label for="totalSqFeet">Total squre feet</label>
+                    <input formControlName="totalSqFeet" class="form-control" name="totalSqFeet">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <label for="perSqRate">Per squre feet rate</label>
+                    <input type="number" class="form-control" formControlName="perSqRate" id="perSqRate">
+                  </div>
+                  <div class="form-group col-sm-4" disabled>
+                    <label for="total">Total</label>
+                    <input formControlName="total" class="form-control"
+                      [value]="sumTotalForm.get('total')?.value | currency:'INR'" name="total">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-sm-4 mt-3">
+                    <button class="btn btn-primary" [disabled]="!sumTotalForm.valid">
+                      <i class="bi-calculator-fill"></i></button>
+                  </div>
+                </div>
+          </form>
+        </div>
       </div>
-      <div class="card-body">
-        <div class="row mb-3">
-          <div class="form-group col-sm-3">
-            <label for="height">Height</label>
-            <input [(ngModel)]="height" type="number" class="form-control" id="height">
-          </div>
-          <div class="form-group col-sm-3">
-            <label for="width">Width</label>
-            <input [(ngModel)]="width" type="number" id="width" class="form-control">
-          </div>
-          <div class="form-group col-sm-3">
-            <label for="quantity">Quantity</label>
-            <input [(ngModel)]="quantity" type="number" class="form-control" id="quantity">
-          </div>
-          <div class="form-group col-sm-3">
-            <label for="perSqRate">Per squre feet rate</label>
-            <input [(ngModel)]="perSqRate"  class="form-control" id="perSqRate">
-          </div>
+      <div class="row mt-3">
+        <div class=" col col-sm-1 col-md-1 col-lg-1">
+          <button class="btn btn-primary" (click)="onReset()">Reset</button>
         </div>
-        <div class="row mb-3">
-          <div class="form-group col-sm-3">
-            <button class="btn btn-warning" (click)="onCalculate()">Calculate</button>
-          </div>
-          <div class="form-group col-sm-3">
-            <label for="totalSqFeet" class="text-success">Total squre feet : {{totalSqFeet}}</label>
-          </div>
-          <div class="form-group col-sm-3">
-            <label for="totalSqRate" class="text-success">Total squre feet rate : {{totalSqRate | currency:'INR'}}</label>
-          </div>
-          <div class="form-group col-sm-3"></div>
+        <div class="col col-sm-1  col-md-1 col-lg-1">
+          <button class="btn btn-primary" (click)="goToHome()">Home</button>
         </div>
-        <div class="row">
-          <div class="col-sm-5"></div>
-          <div class="col-sm-5"></div>
-          <div class="col-sm-1">
-            <button class="btn btn-primary" (click)="onReset()">Reset</button>
-          </div>
-          <div class="col-sm-1">
-            <button class="btn btn-primary" (click)="goToHome()">Home</button>
-          </div>
-        </div>
-  
       </div>
     </div>
   </div>
+</div>

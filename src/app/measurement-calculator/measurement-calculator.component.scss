@@ -1,0 +1,23 @@
+.icon-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+
+    i {
+        cursor: pointer;
+        font-size: 1.5rem;
+    }
+
+    span:disabled {
+        cursor: not-allowed
+    }
+}
+
+input[name=total] {
+    pointer-events: none;
+ }
+
+ input[name=totalSqFeet] {
+    pointer-events: none;
+ }

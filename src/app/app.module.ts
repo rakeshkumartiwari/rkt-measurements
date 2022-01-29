@@ -17,7 +17,7 @@ import { MeasurementCalculatorComponent } from './measurement-calculator/measure
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
