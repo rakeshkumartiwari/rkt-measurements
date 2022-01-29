@@ -2,9 +2,9 @@
   <div class="card">
     <div class="card-header bg-primary text-light">
       {{ profileData?.firstName ? profileData.firstName + " " + profileData.lastName : "Customer name" }}
-      {{ profileData?.address }}
-      {{ profileData?.city }}
-      {{ profileData?.zip }}
+      <ng-container *ngIf="address">
+        {{ '( ' + address + ' )'}}
+      </ng-container>
     </div>
     <div class="card-body">
       <div class="row">
@@ -35,8 +35,7 @@
               </ng-container>
               <div class="row">
                 <div class="form-group col-sm-6 mt-3">
-                  <button class="btn btn-primary"
-                    [disabled]="!measurementsFrom.controls['mesurementList'].valid">
+                  <button class="btn btn-primary" [disabled]="!measurementsFrom.controls['mesurementList'].valid">
                     <i class="bi-calculator-fill"></i></button>
                 </div>
               </div>
@@ -45,27 +44,27 @@
         </div>
         <div class="col-md-6 card">
           <form [formGroup]="sumTotalForm" (submit)="onTotalCalculate()">
-                <div class="row">
-                  <div class="form-group col-sm-4">
-                    <label for="totalSqFeet">Total squre feet</label>
-                    <input formControlName="totalSqFeet" class="form-control" name="totalSqFeet">
-                  </div>
-                  <div class="form-group col-sm-4">
-                    <label for="perSqRate">Per squre feet rate</label>
-                    <input type="number" class="form-control" formControlName="perSqRate" id="perSqRate">
-                  </div>
-                  <div class="form-group col-sm-4" disabled>
-                    <label for="total">Total</label>
-                    <input formControlName="total" class="form-control"
-                      [value]="sumTotalForm.get('total')?.value | currency:'INR'" name="total">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-sm-4 mt-3">
-                    <button class="btn btn-primary" [disabled]="!sumTotalForm.valid">
-                      <i class="bi-calculator-fill"></i></button>
-                  </div>
-                </div>
+            <div class="row">
+              <div class="form-group col-sm-4">
+                <label for="totalSqFeet">Total squre feet</label>
+                <input formControlName="totalSqFeet" class="form-control" name="totalSqFeet">
+              </div>
+              <div class="form-group col-sm-4">
+                <label for="perSqRate">Per squre feet rate</label>
+                <input type="number" class="form-control" formControlName="perSqRate" id="perSqRate">
+              </div>
+              <div class="form-group col-sm-4" disabled>
+                <label for="total">Total</label>
+                <input formControlName="total" class="form-control"
+                  [value]="sumTotalForm.get('total')?.value | currency:'INR'" name="total">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-4 mt-3">
+                <button class="btn btn-primary" [disabled]="!sumTotalForm.valid">
+                  <i class="bi-calculator-fill"></i></button>
+              </div>
+            </div>
           </form>
         </div>
       </div>

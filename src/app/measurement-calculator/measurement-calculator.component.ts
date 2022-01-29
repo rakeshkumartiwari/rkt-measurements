@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { profile } from '../model/model';
 import { MeasurementService } from '../services/measurement.service';
 
 @Component({
@@ -15,13 +16,11 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
     mesurementList: new FormArray([])
   });
   itemArray: FormArray = this.measurementsFrom.controls['mesurementList'] as FormArray;
-  // measurementsFrom!: FormGroup;
   sumTotalForm = new FormGroup({
     totalSqFeet: new FormControl('', Validators.required),
     perSqRate: new FormControl('', Validators.required),
     total: new FormControl('')
   });
-  // itemArray!: FormArray;
   get dataList(): AbstractControl[] {
     const control = this.measurementsFrom.controls['mesurementList'] as FormArray;
     return control.controls;
@@ -29,18 +28,19 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
   totalSqFeet = 0;
   totalSqRate = 0;
   profileSubscription: Subscription[] = [];
-  profileData: any;
+  profileData!: profile;
   fulllName = '';
+  address = '';
 
   constructor(private readonly router: Router, private readonly measurementService: MeasurementService) { }
 
   ngOnInit(): void {
-
     this.addMesurement();
-
-    this.profileSubscription.push(this.measurementService.getProfile().subscribe((data) => {
-      this.profileData = data;
-    }));
+    this.profileSubscription.push(this.measurementService.getProfile()
+      .subscribe((data: profile) => {
+        this.profileData = data;
+        this.address = this.createAddress(this.profileData);
+      }));
   }
 
   ngOnDestroy(): void {
@@ -96,5 +96,13 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
       const total = +this.sumTotalForm.controls.totalSqFeet.value * +this.sumTotalForm.controls.perSqRate.value;
       this.sumTotalForm.controls.total.patchValue(total);
     }
+  }
+
+  createAddress(profileData: profile): string {
+    let address = profileData.address !== '' ? profileData.address + ', ' : '';
+    let city = profileData.city !== '' ? profileData.city + ', ' : '';
+    let state = (profileData.state.name !== undefined && profileData.state.name !== '') ? profileData.state.name + ', ' : '';
+    let zip = profileData.zip !== '' ? profileData.zip : '';
+    return address + city + state + zip;
   }
 }
