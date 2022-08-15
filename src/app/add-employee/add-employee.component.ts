@@ -22,7 +22,7 @@ export class AddEmployeeComponent implements OnInit, OnDestroy, OnChanges {
     { id: 1, value: 'Design' },
   ]
   @Output() pageRefresh = new EventEmitter<boolean>()
-  @Input() employee!: Employee;
+  @Input() employee = {};
 
   constructor(private service: MeasurementService) { }
 
