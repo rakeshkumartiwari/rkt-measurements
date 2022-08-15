@@ -30,7 +30,10 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="popupClose()"></button>
       </div>
       <div class="modal-body">
-        <app-add-employee (pageRefresh)="getPageRefresh($event)" [employee]="employee"></app-add-employee>
+        <app-add-employee 
+        (pageRefresh)="getPageRefresh($event)" 
+        [employee]="employee"
+        [isFormReset]="isFormReset"></app-add-employee>
       </div>
     </div>
   </div>

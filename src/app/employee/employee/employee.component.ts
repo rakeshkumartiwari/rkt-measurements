@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Employee } from 'src/app/model/model';
 import { MeasurementService } from 'src/app/services/measurement.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-employee',
@@ -11,8 +12,9 @@ export class EmployeeComponent implements OnInit, OnChanges {
   employeeList!: Employee[];
   showModal = false;
   employee!: Employee;
+  isFormReset = false;
 
-  constructor(private service: MeasurementService) { }
+  constructor(private service: MeasurementService, private toastr: ToastrService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
@@ -37,6 +39,7 @@ export class EmployeeComponent implements OnInit, OnChanges {
   }
 
   onEdit(employee: Employee) {
+    this.isFormReset = false;
     this.employee = employee;
     this.showModal = true;
   }
@@ -46,18 +49,28 @@ export class EmployeeComponent implements OnInit, OnChanges {
       this.service.deleteEmployee(employeeId).subscribe((data) => {
         if (data) {
           this.getEmployee();
+          this.toastr.success('Deleted successfuly.', 'Delete');
         }
       });
     }
   }
   popupClose() {
+    this.isFormReset = true;
     this.showModal = false;
   }
 
-  getPageRefresh(event: boolean) {
-    if (event) {
+  getPageRefresh(event: any) {
+    if (event && event.isRefresh && event.mode === "add") {
       this.getEmployee();
       this.showModal = false;
+      this.toastr.success('Added successfuly.', 'Add');
+    } else if (event && event.isRefresh && event.mode === "edit") {
+      this.getEmployee();
+      this.showModal = false;
+      this.toastr.success('Updated successfuly.', 'Edit');
+    } else {
+      this.showModal = false;
     }
+    this.isFormReset = true;
   }
 }

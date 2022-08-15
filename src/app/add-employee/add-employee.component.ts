@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Employee } from '../model/model';
 import { MeasurementService } from '../services/measurement.service';
+
 
 @Component({
   selector: 'app-add-employee',
@@ -21,17 +21,20 @@ export class AddEmployeeComponent implements OnInit, OnDestroy, OnChanges {
     { id: 1, value: 'Cloud' },
     { id: 1, value: 'Design' },
   ]
-  @Output() pageRefresh = new EventEmitter<boolean>()
+  @Output() pageRefresh = new EventEmitter<any>()
   @Input() employee = {};
+  @Input() isFormReset = false;
+
 
   constructor(private service: MeasurementService) { }
 
   ngOnChanges(): void {
-    if (this.employee) {
+    if (this.employee && !this.isFormReset) {
       this.employeeForm.patchValue(this.employee);
       this.isEdit = true;
     } else {
       this.isEdit = false;
+      this.employeeForm.reset();
     }
   }
 
@@ -62,20 +65,21 @@ export class AddEmployeeComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.isEdit) {
       this.service.addEmployee(this.employeeForm.value).subscribe((data) => {
         if (data) {
-          this.pageRefresh.emit(true);
+          this.pageRefresh.emit({ isRefresh: true, mode: 'add' });
         }
       });
     } else {
       this.service.updateEmployee(this.employeeForm.value).subscribe((data) => {
         if (data) {
-          this.pageRefresh.emit(true);
+          this.pageRefresh.emit({ isRefresh: true, mode: 'edit' });
         }
       });
     }
   }
 
-  onBack() {
-    this.pageRefresh.emit(true);
+  onClose() {
+    this.pageRefresh.emit({ isRefresh: false, mode: 'close' });
+    this.employeeForm.reset();
   }
 
 }
