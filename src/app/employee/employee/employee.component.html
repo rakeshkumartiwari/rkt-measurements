@@ -1,0 +1,43 @@
+<div class="mx-5 my-3">
+    <button class="btn btn-success" (click)="onAddEmployee()"><i class="bi bi-person-plus"></i> Add epmloyee</button>
+</div>
+<hr>
+<div class="row my-4 mx-4">
+    <div class="col-lg-3" *ngFor="let employee of employeeList">
+          <div class="card text-white  mb-3" style="max-width: 18rem;" [ngClass]="{
+            'bg-info': employee.dept == 'Design',
+            'bg-success': employee.dept == 'Development',
+            'bg-warning': employee.dept == 'Cloud',
+            'bg-danger': employee.dept == 'Administration'
+            
+        }">
+            <div class="card-header">{{employee.position}}</div>
+            <div class="card-body">
+              <h5 class="card-title">{{employee.name}}</h5>
+              <p class="card-text">{{employee.dept}}</p>
+              <button  class="btn btn-primary" (click)="onEdit(employee)">Edit</button>&nbsp;
+              <button  class="btn btn-secondary" (click)="onDelete(employee._id)">Delete</button>
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="modal fade" [ngClass]="{'show':showModal}" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Employee Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="popupClose()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-employee (pageRefresh)="getPageRefresh($event)" [employee]="employee"></app-add-employee>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

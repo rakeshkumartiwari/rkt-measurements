@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { profile } from '../model/model';
+import { clientDetail } from '../model/model';
 import { MeasurementService } from '../services/measurement.service';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-measurement-calculator',
@@ -12,6 +14,8 @@ import { MeasurementService } from '../services/measurement.service';
 })
 export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
 
+  @ViewChild('container', { static: false }) el!: ElementRef;
+  @ViewChild('content', { static: false }) el1!: ElementRef;
   measurementsFrom: FormGroup = new FormGroup({
     mesurementList: new FormArray([])
   });
@@ -28,7 +32,7 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
   totalSqFeet = 0;
   totalSqRate = 0;
   profileSubscription: Subscription[] = [];
-  profileData!: profile;
+  clientDetails!: clientDetail;
   fulllName = '';
   address = '';
 
@@ -37,9 +41,9 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.addMesurement();
     this.profileSubscription.push(this.measurementService.getProfile()
-      .subscribe((data: profile) => {
-        this.profileData = data;
-        this.address = this.createAddress(this.profileData);
+      .subscribe((data: clientDetail) => {
+        this.clientDetails = data;
+        this.address = this.createAddress(this.clientDetails);
       }));
   }
 
@@ -51,6 +55,10 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
     }
   }
 
+  onQuantityChange(data : any, index: any){
+  
+  }
+
   addMesurement(): void {
     if (!this.itemArray.valid) {
       return;
@@ -59,6 +67,9 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
         height: new FormControl('', Validators.required),
         width: new FormControl('', Validators.required),
         quantity: new FormControl('', Validators.required),
+        totalSqFeet: new FormControl(''),
+        perSqRate: new FormControl(''),
+        total: new FormControl(''),
       }));
     }
   }
@@ -98,11 +109,38 @@ export class MeasurementCalculatorComponent implements OnInit, OnDestroy {
     }
   }
 
-  createAddress(profileData: profile): string {
-    let address = profileData.address !== '' ? profileData.address + ', ' : '';
-    let city = profileData.city !== '' ? profileData.city + ', ' : '';
-    let state = (profileData.state.name !== undefined && profileData.state.name !== '') ? profileData.state.name + ', ' : '';
-    let zip = profileData.zip !== '' ? profileData.zip : '';
+  createAddress(clientDetails: clientDetail): string {
+    let address = clientDetails.address !== '' ? clientDetails.address + ', ' : '';
+    let city = clientDetails.city !== '' ? clientDetails.city + ', ' : '';
+    let state = (clientDetails.state.name !== undefined && clientDetails.state.name !== '') ? clientDetails.state.name + ', ' : '';
+    let zip = clientDetails.zip !== '' ? clientDetails.zip : '';
     return address + city + state + zip;
+  }
+
+  onPrint() {
+    const invoiceDetails = {
+      clientDetails: this.clientDetails,
+      itemArray: this.itemArray.value,
+      sumTotal: this.sumTotalForm.value
+    }
+
+    this.measurementService.setInvoiceSubject(invoiceDetails);
+    this.router.navigate(['/measurement-invoice']);
+    // let ele = this.el.nativeElement;
+    // html2canvas(ele).then((canvas) => {
+    //   let imageData = canvas.toDataURL('image/png')
+    //   let imageHeight = canvas.height * 208 / canvas.width;
+    // let pdf = new jsPDF();
+    //   pdf.addImage(imageData, 0, 0 , 208, imageHeight)
+    //   pdf.save('test.pdf');
+    // });
+
+    // pdf.html(this.el1.nativeElement, {
+    //   callback: (pdf) => {
+    //     pdf.save('test.pdf');
+    //   }
+    // })
+
+
   }
 }

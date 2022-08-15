@@ -1,28 +1,41 @@
-<div class="container mt-5">
+<div class="container mt-5" #container>
   <div class="card">
     <div class="card-header bg-primary text-light">
-      {{ profileData?.firstName ? profileData.firstName + " " + profileData.lastName : "Customer name" }}
+      {{ clientDetails?.firstName ? clientDetails.firstName + " " + clientDetails.lastName : "Customer name" }}
       <ng-container *ngIf="address">
         {{ '( ' + address + ' )'}}
       </ng-container>
     </div>
     <div class="card-body">
       <div class="row">
-        <div class="col-md-6 card">
+        <div>
           <form [formGroup]="measurementsFrom" (ngSubmit)="onCalculateTotalSqFeet()">
             <div class="row mb-3" formArrayName="mesurementList">
               <ng-container *ngFor="let data of dataList; let i=index" [formGroupName]="i">
-                <div class="form-group col-sm-4">
+                <div class="form-group col-sm-1">
                   <label for="height">Height</label>
                   <input formControlName="height" type="number" class="form-control" id="height">
                 </div>
-                <div class="form-group col-sm-4">
+                <div class="form-group col-sm-1">
                   <label for="width">Width</label>
                   <input formControlName="width" type="number" id="width" class="form-control">
                 </div>
-                <div class="form-group col-sm-2">
+                <div class="form-group col-sm-1">
                   <label for="quantity">Quantity</label>
-                  <input formControlName="quantity" type="number" class="form-control" id="quantity">
+                  <input formControlName="quantity" type="number" class="form-control" id="quantity"
+                  (keyup)="onQuantityChange(data, i)">
+                </div>
+                <div class="form-group col-sm-2">
+                  <label for="totalSqFeet">Total squre feet</label>
+                  <input formControlName="totalSqFeet" class="form-control" name="totalSqFeet">
+                </div>
+                <div class="form-group col-sm-2">
+                  <label for="perSqRate">Per squre feet rate</label>
+                  <input type="number" class="form-control" formControlName="perSqRate" id="perSqRate">
+                </div>
+                <div class="form-group col-sm-2" disabled>
+                  <label for="total">Total</label>
+                  <input formControlName="total" class="form-control">
                 </div>
                 <div class="col-sm-2 icon-group">
                   <span (click)="addMesurement()">
@@ -42,7 +55,7 @@
             </div>
           </form>
         </div>
-        <div class="col-md-6 card">
+        <div class="col-md-6 card" *ngIf="false">
           <form [formGroup]="sumTotalForm" (submit)="onTotalCalculate()">
             <div class="row">
               <div class="form-group col-sm-4">
@@ -70,12 +83,16 @@
       </div>
       <div class="row mt-3">
         <div class=" col col-sm-1 col-md-1 col-lg-1">
-          <button class="btn btn-primary" (click)="onReset()">Reset</button>
+          <button class="btn btn-primary" (click)="onReset()"><i class="bi-arrow-repeat"></i></button>
         </div>
         <div class="col col-sm-1  col-md-1 col-lg-1">
-          <button class="btn btn-primary" (click)="goToHome()">Home</button>
+          <button class="btn btn-primary" (click)="goToHome()"><i class="bi-house-door-fill"></i></button>
+        </div>
+        <div class="col col-sm-1  col-md-1 col-lg-1">
+          <button class="btn btn-primary" (click)="onPrint()"><i class="bi-printer-fill"></i></button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
